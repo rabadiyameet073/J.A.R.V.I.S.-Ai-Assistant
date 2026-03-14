@@ -1,0 +1,33 @@
+# Optimized AI Desktop Assistant - Jarvis
+# Requirements file with all necessary dependencies
+
+# Core AI and Speech Processing
+openai>=1.0.0
+speechrecognition>=3.10.0
+pyttsx3>=2.90
+PyAudio>=0.2.14
+
+# System Control and Automation
+pyautogui>=0.9.54
+psutil>=5.9.0
+pyperclip>=1.8.2
+pywin32>=306
+
+# Web and Network
+requests>=2.31.0
+
+# Audio and Media Processing
+numpy>=1.24.0
+
+# Additional Utilities
+Pillow>=10.0.0
+
+# Optional but recommended for better performance
+pyaudio>=0.2.11
+pocketsphinx>=5.0.0
+google-cloud-speech>=2.21.0
+
+# Development and Testing (optional)
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0
