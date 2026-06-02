@@ -1,0 +1,256 @@
+J.A.R.V.I.S. AI Assistant - Features and Complete Project Details
+Date: 2026-04-21
+
+OVERVIEW
+J.A.R.V.I.S. (Just A Rather Very Intelligent System) is a full-stack AI assistant.
+It includes a Python FastAPI backend, a React web UI, voice input/output, AI chat,
+automation tools, system controls, communication utilities, media control, file tools,
+timers, alarms, and weather services.
+
+TECH STACK
+- Backend: Python, FastAPI, Pydantic, Uvicorn
+- Frontend: React 18, Vite, React Router
+- AI: OpenAI API
+- Speech: SpeechRecognition (ASR), PyAudio, pyttsx3 (TTS)
+- System/Automation: psutil, pyautogui, pyperclip, subprocess
+- Media: pygame mixer (primary), playsound fallback
+- Communication: smtplib, browser automation, webbrowser
+- Realtime: WebSocket event broadcasting
+
+BACKEND ARCHITECTURE
+- Entry server: backend/main_server.py
+- Main capabilities:
+  - REST API with modular routers
+  - WebSocket endpoint for real-time UI updates
+  - CORS support
+  - API docs via Swagger/ReDoc
+- Major mounted routers:
+  - /api/voice
+  - /api/system
+  - /api/music (media)
+  - /api/files
+  - /api/communication
+  - /api/timers
+  - /api/ai
+  - /api/settings
+  - /api/automation
+
+VOICE PIPELINE
+- Voice orchestration flow:
+  1) Microphone capture (ASR)
+  2) Intent classification
+  3) Route to domain service
+  4) Speak response (TTS)
+- Wake word support with aliases (default includes jarvis behavior)
+- Continuous listener start/stop/status endpoints
+- Echo control behavior while speaking
+- Language-aware recognition and speech behavior
+
+AI FEATURES
+- AI chat endpoint with conversation context/history
+- Quick one-shot AI prompt endpoint
+- Reset conversation history endpoint
+- Quote generation endpoint
+- Configurable model, temperature, and token settings
+- Timeout and fallback handling for robust responses
+- Optional spoken output of AI responses via TTS
+
+INTENT AND NLP
+- Intent classifier in backend/core/intent_classifier.py
+- Keyword/rule-based routing across multiple domains
+- Handles commands for:
+  - Greeting/farewell
+  - AI chat
+  - Media/music
+  - Timers/alarms
+  - System controls
+  - Files
+  - Communication
+  - Automation actions
+
+VOICE FEATURES (ASR + TTS)
+- ASR endpoints:
+  - Listen once
+  - Start continuous listening
+  - Stop listening
+  - Voice status check
+- TTS endpoint:
+  - Speak any provided text
+- Runtime controls:
+  - Speech rate
+  - Volume
+  - Voice selection
+- Multi-language support:
+  - English (en-US)
+  - Hindi (hi-IN)
+  - Gujarati (gu-IN)
+
+SYSTEM CONTROL FEATURES
+- System info endpoint:
+  - CPU, memory, disk, battery, platform, host/network details
+- Power control endpoint:
+  - Shutdown, restart, sleep, hibernate, lock, logout (OS aware)
+- Volume control endpoint:
+  - Up, down, mute, unmute, set level
+- Display control endpoint:
+  - Off, on, sleep, lock operations
+- Launch helpers:
+  - Open app by name
+  - Open website URL
+- Network/WiFi actions where supported
+
+MUSIC AND MEDIA FEATURES
+- Music actions:
+  - Play by query
+  - Pause
+  - Resume
+  - Stop
+  - Status
+  - Song listing
+- Music library scan with configurable search paths
+- Supported formats include common audio files (mp3/wav/flac/ogg/m4a)
+- Fuzzy matching for song lookup
+- Thread-safe playback management
+
+FILE FEATURES
+- Create folders (desktop/custom path)
+- File search (recursive/fuzzy)
+- Read text-like files with safe limits
+- Screenshot capture and save
+- List desktop files
+- Open folder in system file explorer
+
+COMMUNICATION FEATURES
+- WhatsApp actions:
+  - Open
+  - Send message
+  - Call action pattern
+- Email sending via SMTP with subject/body support
+- Contacts management stored in contacts.json
+- Web search/open browser support
+- Gmail open shortcut endpoint
+
+TIMERS, ALARMS, STOPWATCH, CALCULATOR
+- Timer creation/list/cancel with labels
+- Alarm scheduling by time
+- Stopwatch start/stop/read
+- Calculator expression endpoint
+- Callback notifications integrated with speech response flow
+
+WEATHER FEATURES
+- Weather retrieval through weather service
+- Returns current conditions and summary fields
+- Supports detailed weather information in structured responses
+
+AI AUTOMATION FEATURES
+- Smart app launcher with suggestions and launch history
+- Prompt toolkit:
+  - Prompt categories
+  - Prompt templates
+  - Prompt generation/fill
+  - Quick prompt generation from natural descriptions
+- Clipboard tools:
+  - Read clipboard
+  - Write clipboard
+- Desktop automation tools:
+  - Type text into active app
+  - Run shell command with timeout
+  - Generate-copy-inject workflow
+
+SETTINGS FEATURES
+- Fetch complete runtime settings
+- Update voice settings at runtime
+- Configurable areas:
+  - TTS (rate, volume, voice)
+  - ASR (language, timeout/limits)
+  - AI (model, temperature, token limits)
+  - Wake word and aliases
+  - Music search paths
+
+DATA MODELS
+- Request models (examples):
+  - ChatRequest, CommandRequest, PowerRequest, VolumeRequest
+  - MusicRequest, TimerRequest, AlarmRequest
+  - EmailRequest, WhatsAppRequest
+  - FileSearchRequest, FolderRequest, ScreenshotRequest
+- Response models (examples):
+  - BaseResponse
+  - ChatResponse
+  - SystemInfoResponse
+  - MusicStatusResponse
+  - FileListResponse
+  - TimerResponse
+  - WeatherResponse
+
+WEB UI FEATURES (jarvis-web-ui)
+- Main pages:
+  - Dashboard
+  - AI Chat
+  - AI Automation
+  - Music
+  - Files
+  - Communication
+  - Timers
+  - System
+  - Settings
+  - AssistantDashboard (real-time monitoring)
+- UI structure:
+  - Layout with Header and Sidebar
+  - Reusable Modal component
+  - VoiceAssistant component for browser voice interactions
+- Frontend hooks:
+  - useApi: API request wrapper
+  - useVoice: browser speech recognition flow
+  - useTheme: theme mode handling
+  - useLogger: event logging
+- API utility:
+  - Centralized endpoint calls and WebSocket handling
+  - Action aliasing for compatibility
+
+REAL-TIME AND DASHBOARD EXPERIENCE
+- Live event updates from backend via WebSocket
+- Chat and assistant status reflected in UI
+- Voice/event logs in assistant dashboard page
+- Function-focused navigation across all feature domains
+
+PROJECT FILES OF INTEREST
+- Backend entry and orchestration:
+  - backend/main_server.py
+  - backend/voice_pipeline.py
+- Core logic:
+  - backend/core/config.py
+  - backend/core/intent_classifier.py
+  - backend/core/logger.py
+- Routers:
+  - backend/routers/*.py
+- Services:
+  - backend/services/*.py
+- Models:
+  - backend/models/requests.py
+  - backend/models/responses.py
+- Frontend:
+  - jarvis-web-ui/src/pages/*.jsx
+  - jarvis-web-ui/src/components/**/*
+  - jarvis-web-ui/src/hooks/*.js
+  - jarvis-web-ui/src/utils/api.js
+
+RUN/STARTUP
+- Backend run pattern:
+  - uvicorn backend.main_server:app --host 0.0.0.0 --port 8000 --reload
+- Frontend run pattern:
+  - npm install
+  - npm run dev
+- Batch launcher available:
+  - Start_JARVIS_Full.bat
+
+COMING SOON
+- AI Prompt Generator (advanced templates and smarter prompt building)
+- Tool Integration panel (deeper command/tool workflows)
+- Smart App Launcher enhancements (better suggestions and faster matching)
+- Expanded automation chains (generate, copy, inject, and execute workflows)
+- More UI polish for AI Automation tabs and guided actions
+
+SUMMARY
+J.A.R.V.I.S. is a multi-domain assistant platform that combines conversational AI,
+voice interaction, desktop/system control, communication tools, productivity utilities,
+and a modern web dashboard into one integrated project.

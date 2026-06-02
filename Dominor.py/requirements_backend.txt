@@ -1,0 +1,42 @@
+# JARVIS v2.0 — Backend Requirements
+# Install: pip install -r requirements_backend.txt
+
+# ── FastAPI server ──────────────────────────────────────────────────────
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.0.0
+websockets>=12.0
+python-multipart>=0.0.9
+
+# ── AI & NLP ────────────────────────────────────────────────────────────
+openai>=1.0.0
+
+# ── Speech (ASR + TTS) ──────────────────────────────────────────────────
+speechrecognition>=3.10.0
+pyttsx3>=2.90
+PyAudio>=0.2.14
+
+# ── System control ──────────────────────────────────────────────────────
+psutil>=5.9.0
+pyautogui>=0.9.54
+pyperclip>=1.8.2
+Pillow>=10.0.0
+
+# ── Audio playback ──────────────────────────────────────────────────────
+pygame>=2.5.0
+
+# ── Web & network ───────────────────────────────────────────────────────
+requests>=2.31.0
+
+# ── Windows-only (optional, safe to skip on macOS/Linux) ────────────────
+# pywin32>=306
+# pycaw>=20240210
+
+# ── PDF / document reading (optional) ──────────────────────────────────
+# PyMuPDF>=1.24.0
+# pdfplumber>=0.10.0
+# python-docx>=1.1.0
+
+# ── Dev tools (optional) ────────────────────────────────────────────────
+# pytest>=7.4.0
+# black>=23.0.0
