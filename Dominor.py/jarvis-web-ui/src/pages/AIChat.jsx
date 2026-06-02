@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useOutletContext } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "../components/Icons/Icons";
-import { api, sendChatMessage } from "../utils/api";
+import { api, sendChatMessage, speak } from "../utils/api";
 
 const quickCommands = [
     { label: "What time is it?",  action: "get_date_day_info", icon: "Timer" },
@@ -144,8 +144,30 @@ export default function AIChat() {
                 appendAssistantEvent?.({ type: "assistant", text: typeof responseText === "string" ? responseText : String(responseText) });
             } catch {
                 setTypingWithTimeout(false);
-                addMessage("assistant", "⚠ Could not reach the backend. Make sure JARVIS is running.");
-                appendAssistantEvent?.({ type: "assistant", text: "Could not reach the backend. Make sure JARVIS is running." });
+                const warnMsg = "Could not reach the backend. Please setup locally and make the API status on.";
+                addMessage("assistant", `⚠ ${warnMsg}`);
+                appendAssistantEvent?.({ type: "assistant", text: warnMsg });
+                void speak(warnMsg).then((res) => {
+                    const failed = res?.ok === false || Boolean(res?.error) || Boolean(res?.detail);
+                    if (!failed) return;
+                    if (typeof window === "undefined") return;
+                    if (!("speechSynthesis" in window)) return;
+                    try {
+                        window.speechSynthesis.cancel();
+                        const u = new SpeechSynthesisUtterance(warnMsg);
+                        u.lang = "en-US";
+                        window.speechSynthesis.speak(u);
+                    } catch (_) {}
+                }).catch(() => {
+                    if (typeof window === "undefined") return;
+                    if (!("speechSynthesis" in window)) return;
+                    try {
+                        window.speechSynthesis.cancel();
+                        const u = new SpeechSynthesisUtterance(warnMsg);
+                        u.lang = "en-US";
+                        window.speechSynthesis.speak(u);
+                    } catch (_) {}
+                });
             }
         }
     }, [input, isTyping, wsConnected, addMessage, setTypingWithTimeout, sendWsMessage, appendAssistantEvent]);
@@ -170,8 +192,30 @@ export default function AIChat() {
             appendAssistantEvent?.({ type: "assistant", text: typeof response === "object" ? JSON.stringify(response, null, 2) : String(response) });
         } catch {
             setTypingWithTimeout(false);
-            addMessage("assistant", "⚠ Command failed. Try again.");
-            appendAssistantEvent?.({ type: "assistant", text: "Command failed. Try again." });
+            const warnMsg = "Command failed. Please setup locally and make the API status on.";
+            addMessage("assistant", `⚠ ${warnMsg}`);
+            appendAssistantEvent?.({ type: "assistant", text: warnMsg });
+            void speak(warnMsg).then((res) => {
+                const failed = res?.ok === false || Boolean(res?.error) || Boolean(res?.detail);
+                if (!failed) return;
+                if (typeof window === "undefined") return;
+                if (!("speechSynthesis" in window)) return;
+                try {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(warnMsg);
+                    u.lang = "en-US";
+                    window.speechSynthesis.speak(u);
+                } catch (_) {}
+            }).catch(() => {
+                if (typeof window === "undefined") return;
+                if (!("speechSynthesis" in window)) return;
+                try {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(warnMsg);
+                    u.lang = "en-US";
+                    window.speechSynthesis.speak(u);
+                } catch (_) {}
+            });
         }
     }, [isTyping, wsConnected, addMessage, setTypingWithTimeout, sendWsMessage, runAction, appendAssistantEvent]);
 

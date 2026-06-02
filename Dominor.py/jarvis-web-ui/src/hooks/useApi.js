@@ -1,6 +1,6 @@
 // Custom hook for API calls with loading and error states
 import { useState, useCallback } from "react";
-import { runAction as apiRunAction, checkApiStatus } from "../utils/api";
+import { runAction as apiRunAction, checkApiStatus, speak } from "../utils/api";
 
 export function useApi(logger) {
     const [loading, setLoading] = useState(false);
@@ -38,6 +38,28 @@ export function useApi(logger) {
             return result;
         } catch (e) {
             logger?.append(`Network error: ${e.message}`, "error");
+            const warnMsg = "Please setup locally and make the API status on.";
+            void speak(warnMsg).then((res) => {
+                const failed = res?.ok === false || Boolean(res?.error) || Boolean(res?.detail);
+                if (!failed) return;
+                if (typeof window === "undefined") return;
+                if (!("speechSynthesis" in window)) return;
+                try {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(warnMsg);
+                    u.lang = "en-US";
+                    window.speechSynthesis.speak(u);
+                } catch (_) {}
+            }).catch(() => {
+                if (typeof window === "undefined") return;
+                if (!("speechSynthesis" in window)) return;
+                try {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(warnMsg);
+                    u.lang = "en-US";
+                    window.speechSynthesis.speak(u);
+                } catch (_) {}
+            });
             return { ok: false, error: e.message };
         } finally {
             setLoading(false);

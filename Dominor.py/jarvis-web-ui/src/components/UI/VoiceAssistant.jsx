@@ -287,7 +287,9 @@ export default function VoiceAssistant({
                     res.message || res.response || (navigated ? "Done." : "I couldn't process that.")
                 );
             }).catch(() => {
-                showResponse("Backend unreachable. Please check the server.");
+                const warnMsg = "Please setup locally and make the API status on.";
+                showResponse(warnMsg, "Offline Warning");
+                speakText(warnMsg);
             });
         }
     }, [
@@ -432,7 +434,9 @@ export default function VoiceAssistant({
         } catch (_) {
             setProcessing(false);
             setStatusText("Backend mic error");
-            showResponse("Backend voice listener failed. Please check microphone setup.", "Error");
+            const warnMsg = "Backend voice listener failed. Please setup locally and make the API status on.";
+            showResponse(warnMsg, "Error");
+            speakText(warnMsg);
         } finally {
             setIsListening(false);
         }
