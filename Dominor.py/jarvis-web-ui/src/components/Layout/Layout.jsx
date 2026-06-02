@@ -63,6 +63,7 @@ export default function Layout() {
     const [wsLastMessage, setWsLastMessage] = useState(null);
     const wsRef = useRef(null);
     const wsRetryRef = useRef(null);
+    const hasSpokenGreeting = useRef(false);
 
     const connectWS = useCallback(() => {
         const ws = createWebSocket({
@@ -151,33 +152,45 @@ export default function Layout() {
         t,
     };
 
+    const speakInBrowser = (text) => {
+        if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+        try {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = "en-US";
+            u.rate = 1.0;
+            u.pitch = 1.0;
+            window.speechSynthesis.speak(u);
+        } catch (_) {}
+    };
+
+    const playGreeting = useCallback(() => {
+        if (hasSpokenGreeting.current) return;
+        hasSpokenGreeting.current = true;
+
+        window.removeEventListener("click", playGreeting);
+        window.removeEventListener("keydown", playGreeting);
+
+        const greeting = "Jarvis is online. All systems are ready. What can I do for you sir, today?";
+        speakInBrowser(greeting);
+        void speak(greeting).catch(() => {});
+    }, []);
+
     const handleBootComplete = useCallback(() => {
         setBooting(false);
-        const greeting = "Jarvis is online. All systems are ready. What can I do for you sir, today?";
-        void speak(greeting).then((res) => {
-            const failed = res?.ok === false || Boolean(res?.error) || Boolean(res?.detail);
-            if (!failed) return;
-            if (typeof window === "undefined") return;
-            if (!("speechSynthesis" in window)) return;
-            try {
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(greeting);
-                u.lang = "en-US";
-                u.rate = 1.0;
-                u.pitch = 1.0;
-                window.speechSynthesis.speak(u);
-            } catch (_) {}
-        }).catch(() => {
-            if (typeof window === "undefined") return;
-            if (!("speechSynthesis" in window)) return;
-            try {
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(greeting);
-                u.lang = "en-US";
-                window.speechSynthesis.speak(u);
-            } catch (_) {}
-        });
-    }, []);
+        playGreeting();
+        if (!hasSpokenGreeting.current) {
+            window.addEventListener("click", playGreeting);
+            window.addEventListener("keydown", playGreeting);
+        }
+    }, [playGreeting]);
+
+    useEffect(() => {
+        return () => {
+            window.removeEventListener("click", playGreeting);
+            window.removeEventListener("keydown", playGreeting);
+        };
+    }, [playGreeting]);
 
     // Boot sequence
     if (booting) {
