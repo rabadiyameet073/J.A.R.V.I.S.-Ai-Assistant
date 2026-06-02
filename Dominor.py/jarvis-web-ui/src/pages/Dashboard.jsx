@@ -111,14 +111,14 @@ export default function Dashboard() {
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
-                                    <button
-                                        onClick={() => {
-                                            alert("Please refer to the README.md file created in the root workspace directory for full local configuration steps, sir.");
-                                        }}
-                                        className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono text-xs transition-colors border border-white/5"
+                                    <a
+                                        href="https://github.com/rabadiyameet073/J.A.R.V.I.S.-Ai-Assistant/blob/main/README.md"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono text-xs transition-colors border border-white/5 text-center flex items-center justify-center decoration-none"
                                     >
                                         Setup Guide
-                                    </button>
+                                    </a>
                                     <button
                                         onClick={dismissWarning}
                                         className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold font-mono text-xs transition-colors"
