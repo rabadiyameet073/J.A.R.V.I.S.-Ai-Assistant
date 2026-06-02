@@ -542,6 +542,20 @@ export default function VoiceAssistant({
 
             <style>{`
                 .voice-assistant-overlay {
+                    --primary-color: hsl(var(--primary, 190 100% 50%));
+                    --accent-color: hsl(var(--accent, 195 100% 40%));
+                    --primary-glow: rgba(0, 212, 255, 0.35);
+                    --primary-glow-strong: rgba(0, 212, 255, 0.6);
+                    --accent-glow: rgba(0, 137, 168, 0.45);
+                    --bg-card: rgba(10, 10, 10, 0.85);
+                    --border-color: hsl(var(--border, 0 0% 14%));
+                    --border-light: rgba(255, 255, 255, 0.08);
+                    --text-muted: hsl(var(--muted-foreground, 0 0% 50%));
+                    --text-primary: #f3f4f6;
+                    --text-accent: hsl(var(--primary, 190 100% 50%));
+                    --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.15);
+                    --radius-lg: 16px;
+
                     position: fixed;
                     bottom: 2rem;
                     right: 2rem;
@@ -556,9 +570,11 @@ export default function VoiceAssistant({
                     width: 72px;
                     height: 72px;
                     border-radius: 50%;
-                    background: transparent;
-                    border: 3px solid var(--primary);
-                    color: var(--primary);
+                    background: rgba(10, 10, 10, 0.8);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    border: 3px solid var(--primary-color);
+                    color: var(--primary-color);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -574,7 +590,7 @@ export default function VoiceAssistant({
                     position: absolute;
                     inset: -6px;
                     border-radius: 50%;
-                    border: 1px solid var(--accent);
+                    border: 1px solid var(--accent-color);
                     animation: orb-spin 8s linear infinite;
                     opacity: 0.5;
                 }
@@ -583,7 +599,7 @@ export default function VoiceAssistant({
                     position: absolute;
                     inset: -12px;
                     border-radius: 50%;
-                    border: 1px dashed var(--primary);
+                    border: 1px dashed var(--primary-color);
                     animation: orb-spin 12s linear infinite reverse;
                     opacity: 0.3;
                 }
@@ -593,14 +609,14 @@ export default function VoiceAssistant({
                     background: rgba(255, 255, 255, 0.05);
                 }
                 .voice-orb.listening {
-                    border-color: var(--accent);
-                    color: var(--accent);
+                    border-color: var(--accent-color);
+                    color: var(--accent-color);
                     box-shadow: 0 0 35px var(--accent-glow), inset 0 0 20px var(--accent-glow);
                     animation: orb-pulse-intense 0.8s infinite alternate;
                 }
                 .voice-orb.listening::before, .voice-orb.listening::after {
                     animation-duration: 3s;
-                    border-color: var(--accent);
+                    border-color: var(--accent-color);
                     opacity: 0.8;
                 }
                 .voice-orb.processing {
@@ -626,7 +642,7 @@ export default function VoiceAssistant({
                     background: var(--bg-card);
                     backdrop-filter: blur(20px);
                     -webkit-backdrop-filter: blur(20px);
-                    border: 1px solid var(--border);
+                    border: 1px solid var(--border-color);
                     border-radius: var(--radius-lg);
                     overflow: hidden;
                     box-shadow: var(--shadow-lg), var(--shadow-glow);
@@ -636,12 +652,12 @@ export default function VoiceAssistant({
                 .voice-dialogue-header {
                     padding: 12px 16px;
                     background: rgba(255, 255, 255, 0.05);
-                    border-bottom: 1px solid var(--border);
+                    border-bottom: 1px solid var(--border-color);
                     display: flex;
                     align-items: center;
                     gap: 10px;
                     font-size: 13px;
-                    color: var(--primary);
+                    color: var(--primary-color);
                     font-weight: 600;
                     letter-spacing: 0.05em;
                     text-transform: uppercase;
@@ -651,7 +667,7 @@ export default function VoiceAssistant({
                     height: 24px;
                     border-radius: 50%;
                     background: transparent;
-                    border: 1px solid var(--primary);
+                    border: 1px solid var(--primary-color);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -675,7 +691,7 @@ export default function VoiceAssistant({
                     border-radius: 6px;
                     transition: all 0.2s;
                 }
-                .close-btn:hover { background: rgba(255,255,255,0.1); color: var(--primary); }
+                .close-btn:hover { background: rgba(255,255,255,0.1); color: var(--primary-color); }
                 .voice-you-said {
                     display: flex;
                     align-items: center;
@@ -684,7 +700,7 @@ export default function VoiceAssistant({
                     background: rgba(255, 255, 255, 0.03);
                     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
                     font-size: 13px;
-                    color: var(--accent);
+                    color: var(--accent-color);
                     font-style: italic;
                 }
                 .voice-dialogue-content {
@@ -704,10 +720,10 @@ export default function VoiceAssistant({
                 .processing-indicator span {
                     width: 10px;
                     height: 10px;
-                    background: var(--primary);
+                    background: var(--primary-color);
                     border-radius: 50%;
                     animation: dot-bounce 1.4s infinite ease-in-out both;
-                    box-shadow: 0 0 10px var(--primary);
+                    box-shadow: 0 0 10px var(--primary-color);
                 }
                 .processing-indicator span:nth-child(1) { animation-delay: -0.32s; }
                 .processing-indicator span:nth-child(2) { animation-delay: -0.16s; }
@@ -735,7 +751,7 @@ export default function VoiceAssistant({
                     transition: all 0.2s;
                 }
                 .voice-hint-chip:hover {
-                    border-color: var(--primary);
+                    border-color: var(--primary-color);
                     box-shadow: 0 0 10px var(--primary-glow);
                     background: rgba(255, 255, 255, 0.1);
                 }
@@ -745,7 +761,7 @@ export default function VoiceAssistant({
                     align-items: center;
                     padding: 10px 16px;
                     background: rgba(0,0,0,0.2);
-                    border-top: 1px solid var(--border);
+                    border-top: 1px solid var(--border-color);
                     font-size: 11px;
                     color: var(--text-muted);
                 }
@@ -757,7 +773,7 @@ export default function VoiceAssistant({
                 }
                 @keyframes orb-pulse-intense {
                     0%   { transform: scale(1); box-shadow: 0 0 20px var(--accent-glow), inset 0 0 10px var(--accent-glow); }
-                    100% { transform: scale(1.1); box-shadow: 0 0 50px var(--accent), inset 0 0 30px var(--accent); }
+                    100% { transform: scale(1.1); box-shadow: 0 0 50px var(--accent-color), inset 0 0 30px var(--accent-color); }
                 }
                 @keyframes orb-spin  { 100% { transform: rotate(360deg); } }
                 @keyframes sonar {
@@ -771,6 +787,25 @@ export default function VoiceAssistant({
                 @keyframes dot-bounce {
                     0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
                     40%           { transform: scale(1); opacity: 1; }
+                }
+
+                /* ── Mobile responsiveness ── */
+                @media (max-width: 768px) {
+                    .voice-assistant-overlay {
+                        bottom: 1rem;
+                        right: 1rem;
+                    }
+                    .voice-orb {
+                        width: 60px;
+                        height: 60px;
+                        border-width: 2px;
+                    }
+                    .voice-orb::before { inset: -4px; }
+                    .voice-orb::after { inset: -8px; }
+                    .voice-dialogue {
+                        width: calc(100vw - 2rem);
+                        max-width: 340px;
+                    }
                 }
             `}</style>
         </div>
