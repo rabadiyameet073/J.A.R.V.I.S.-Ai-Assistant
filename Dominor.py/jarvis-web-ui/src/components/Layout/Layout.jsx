@@ -37,6 +37,8 @@ function TimeDisplay() {
 export default function Layout() {
     const [booting, setBooting] = useState(true);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const expanded = isMobileOpen || isHovered;
     const location = useLocation();
     const logger = useLogger();
     const { logs, append, clear, getLogText } = logger;
@@ -217,28 +219,45 @@ export default function Layout() {
             </AnimatePresence>
 
             {/* Sidebar */}
-            <div className="fixed md:relative top-0 left-0 h-full w-64 z-50 flex flex-col">
+            <div
+                className={`fixed md:relative top-0 left-0 h-full z-50 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] ${expanded ? "w-64" : "w-20"}`}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
                 <div
                     className={`
-                        absolute md:relative inset-y-0 left-0 w-64 flex flex-col h-full bg-sidebar border-r border-border/40
-                        transform transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
+                        absolute md:relative inset-y-0 left-0 flex flex-col h-full bg-sidebar border-r border-border/40
+                        transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]
+                        ${expanded ? "w-64" : "w-20"}
                         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
                     `}
                 >
                     {/* Brand */}
-                    <div className="h-16 md:h-20 flex items-center px-5 border-b border-border/30 shrink-0">
-                        <div className="flex items-center gap-3 w-full">
+                    <div className={`h-16 md:h-20 flex items-center ${expanded ? "px-5" : "justify-center px-0"} border-b border-border/30 shrink-0 transition-all duration-300`}>
+                        <div className={`flex items-center ${expanded ? "gap-3 w-full" : "justify-center"}`}>
                             <div className="relative shrink-0">
                                 <div className="w-8 h-8 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
                                     <div className="w-3 h-3 rounded-full bg-cyan-400" style={{ boxShadow: "0 0 8px rgba(0,212,255,0.8)" }} />
                                 </div>
                                 <div className="absolute inset-0 rounded-full border border-cyan-500/20 animate-ping" style={{ animationDuration: "3s" }} />
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="font-black tracking-[0.12em] text-sm text-white">J.A.R.V.I.S.</div>
-                                <TimeDisplay />
-                            </div>
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" style={{ boxShadow: "0 0 6px rgba(74,222,128,0.8)" }} />
+                            <AnimatePresence>
+                                {expanded && (
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="flex-1 min-w-0 ml-3 flex items-center justify-between overflow-hidden"
+                                    >
+                                        <div className="min-w-0">
+                                            <div className="font-black tracking-[0.12em] text-sm text-white">J.A.R.V.I.S.</div>
+                                            <TimeDisplay />
+                                        </div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0 ml-2" style={{ boxShadow: "0 0 6px rgba(74,222,128,0.8)" }} />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
 
@@ -266,7 +285,7 @@ export default function Layout() {
                                             />
                                         )}
                                         <div className={`
-                                            relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors duration-150
+                                            relative flex items-center ${expanded ? "gap-3 px-3" : "justify-center px-0"} py-2.5 rounded-xl text-sm font-medium transition-all duration-300
                                             ${isActive ? "text-white" : "text-muted-foreground hover:text-gray-200 hover:bg-white/[0.04]"}
                                         `}>
                                             <Icon
@@ -274,7 +293,19 @@ export default function Layout() {
                                                 size={16}
                                                 className={`shrink-0 transition-colors ${isActive ? "text-cyan-400" : "text-gray-500"}`}
                                             />
-                                            <span className="truncate">{item.label}</span>
+                                            <AnimatePresence>
+                                                {expanded && (
+                                                    <motion.span
+                                                        initial={{ opacity: 0, x: -8 }}
+                                                        animate={{ opacity: 1, x: 0 }}
+                                                        exit={{ opacity: 0, x: -8 }}
+                                                        transition={{ duration: 0.2 }}
+                                                        className="truncate ml-1 overflow-hidden"
+                                                    >
+                                                        {item.label}
+                                                    </motion.span>
+                                                )}
+                                            </AnimatePresence>
                                             {isActive && (
                                                 <motion.div
                                                     initial={{ scaleX: 0 }}
@@ -292,15 +323,39 @@ export default function Layout() {
 
                     {/* Footer */}
                     <div className="p-3 border-t border-border/30 shrink-0">
-                        <div className="flex items-center justify-between p-3 rounded-xl bg-black/30 border border-border/30">
+                        <div className={`flex items-center ${expanded ? "justify-between p-3" : "justify-center p-2.5"} rounded-xl bg-black/30 border border-border/30 transition-all duration-300`}>
                             <div className="flex items-center gap-2.5">
                                 <div className="relative flex h-2.5 w-2.5 shrink-0">
                                     <span className="status-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60" />
                                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
                                 </div>
-                                <span className="text-[11px] font-medium text-gray-400">System Online</span>
+                                <AnimatePresence>
+                                    {expanded && (
+                                        <motion.span
+                                            initial={{ opacity: 0, x: -8 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -8 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="text-[11px] font-medium text-gray-400 overflow-hidden whitespace-nowrap"
+                                        >
+                                            System Online
+                                        </motion.span>
+                                    )}
+                                </AnimatePresence>
                             </div>
-                            <span className="text-[10px] font-mono text-muted-foreground">v2.0</span>
+                            <AnimatePresence>
+                                {expanded && (
+                                    <motion.span
+                                        initial={{ opacity: 0, x: 8 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 8 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="text-[10px] font-mono text-muted-foreground overflow-hidden whitespace-nowrap"
+                                    >
+                                        v2.0
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
                 </div>
