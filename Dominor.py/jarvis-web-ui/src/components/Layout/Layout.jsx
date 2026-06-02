@@ -7,7 +7,7 @@ import VoiceAssistant from "../UI/VoiceAssistant";
 import { useLogger } from "../../hooks/useLogger";
 import { useApi } from "../../hooks/useApi";
 import { Icon } from "../Icons/Icons";
-import { createWebSocket } from "../../utils/api";
+import { createWebSocket, speak } from "../../utils/api";
 import { getStoredUiLanguage, storeUiLanguage, translate } from "../../i18n/uiLanguage";
 
 const navItems = [
@@ -149,11 +149,39 @@ export default function Layout() {
         t,
     };
 
+    const handleBootComplete = useCallback(() => {
+        setBooting(false);
+        const greeting = "Hello sir, I am Jarvis.";
+        void speak(greeting).then((res) => {
+            const failed = res?.ok === false || Boolean(res?.error) || Boolean(res?.detail);
+            if (!failed) return;
+            if (typeof window === "undefined") return;
+            if (!("speechSynthesis" in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(greeting);
+                u.lang = "en-US";
+                u.rate = 1.0;
+                u.pitch = 1.0;
+                window.speechSynthesis.speak(u);
+            } catch (_) {}
+        }).catch(() => {
+            if (typeof window === "undefined") return;
+            if (!("speechSynthesis" in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(greeting);
+                u.lang = "en-US";
+                window.speechSynthesis.speak(u);
+            } catch (_) {}
+        });
+    }, []);
+
     // Boot sequence
     if (booting) {
         return (
             <AnimatePresence>
-                <BootSequence onComplete={() => setBooting(false)} />
+                <BootSequence onComplete={handleBootComplete} />
             </AnimatePresence>
         );
     }
