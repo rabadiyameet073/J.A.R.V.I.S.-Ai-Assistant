@@ -229,7 +229,7 @@ export default function VoiceAssistant({
             setIsOpen(true);
             onAssistantEvent?.({ type: "user", text: raw });
             const greeting =
-                "Hello sir. I am Jarvis — your personal AI assistant. I am available for you 24 hours a day and 7 days a week. What can I do for you, sir?";
+                "Jarvis is online. All systems are ready. What can I do for you sir, today?";
             showResponse(greeting, "JARVIS");
             speakText(greeting);
             return;
@@ -365,7 +365,7 @@ export default function VoiceAssistant({
         setIsListening(true);
         setIsOpen(true);
         setLastUserSaid("");
-        const boot = "Jarvis is online, sir.";
+        const boot = "Jarvis is online. All systems are ready. What can I do for you sir, today?";
         setJarvisResponse(boot);
         speakText(boot);
         setProcessing(true);

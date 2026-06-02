@@ -153,7 +153,7 @@ export default function Layout() {
 
     const handleBootComplete = useCallback(() => {
         setBooting(false);
-        const greeting = "Hello sir, I am Jarvis.";
+        const greeting = "Jarvis is online. All systems are ready. What can I do for you sir, today?";
         void speak(greeting).then((res) => {
             const failed = res?.ok === false || Boolean(res?.error) || Boolean(res?.detail);
             if (!failed) return;
